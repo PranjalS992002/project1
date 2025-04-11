@@ -1,0 +1,50 @@
+class - where jobs are sceduled for execution
+
+prty - defines priority of job within class for execution
+
+time - amount of cpu time job may use
+if time exceeds than defined time in time parameter then it gives S322 ABEND failure
+time = maximum means job will run until step execute succesfullly or until we manually terminate the job
+is allowed to run indefinitely and will only terminate if the job finishes successfully or is manually stopped, 
+as there is no set time limit.
+
+ If more storage is needed the result is a S878 or 
+S808 or S804 ABEND failure. If one of this failure’s occurs the user must increase the value in the 
+REGION parameter.
+When the amount of storage requested in the REGION parameter is higher than the address space 
+can provide, an S822 ABEND failure will result.
+
+PGM=programname specifies the program that will be executed in that step
+The programname is typically the name of the executable program (such as SORT, IEFBR14, or user-written programs).
+system defined program
+
+program specified in pgm parameter is always member of steplib or joblib
+If the specified member is found, it is executed. If not found, the result is S806 
+ABEND failure.
+
+ABEND failures while supplying inconsistent DCB values:
+• S013-20 ABEND when RECFM=FB is used but the LRECL is not an exact multiple of the block size. 
+• S013-34 ABEND when RECFM=FB is used and the LRECL is greater than the BLKSIZE.
+• S013-34 ABEND when RECFM=VB is used and the LRECL is greater than the BLKSIZE-4.
+• S001-04 ABEND when BLKSIZE in the DCB parameter is smaller than the actual blocksize and a multiple 
+of the LRECL in the DSCB of the dataset
+
+JOBLIB: Specifies libraries that are available to all steps in the job.
+STEPLIB: Specifies libraries that are available to a particular step in the job.
+
+
+1)in cond return code is used not to execute the step and
+abend is used to execute the step
+
+2)
+JOBLIB is used to specify one or more user-defined libraries at the job level where the load modules reside. When the job is submitted for execution,
+ the system searches these libraries to find the load module for each step in the job.
+
+STEPLIB is used to specify one or more user-defined libraries at the step level where the load modules reside. When the job step is executed, 
+the system searches these libraries to find the load module for that step.
+
+3)PASS: The dataset is passed to subsequent steps within the same job.
+KEEP: The dataset is retained on the volume after the job step completes successfully.
+
+4)The first sub-parameter indicates the unit of measure used for space allocation.
+• Second sub-parameter of the SPACE parameter indicates how much space to allocate to the dataset
